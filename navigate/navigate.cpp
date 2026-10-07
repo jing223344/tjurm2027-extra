@@ -87,4 +87,68 @@ class MAP_BASE
 */
 
 //IMPLEMENT YOUR CODE HERE
+class MAP : public MAP_BASE {
+	public :
+	    void output() {
+			int h = map_in.size();
+			int w = map_in[0].size();
+			int dx[9] = {-1,1,0,0,1,1,-1,-1,0};
+			int dy[9] = {0,0,1,-1,1,-1,1,-1,0};
+			std::pair<int,int> path[100][100];
+			std::queue<std::pair<int,int>> q;
+			q.push({2,2});
+			visit[2][2] = true;
+			path[2][2]={-1,-1};
+			while(!q.empty())
+			{
+				int x = q.front().first;
+				int y = q.front().second;
+				q.pop();
+				if(x == w - 3 && y == h - 3) {
+					break;
+				}
+				for(int i = 0; i < 4; i++) {
+				    int x1 = x + dx[i];
+				    int y1 = y + dy[i];
+					if(x1 < 0 || x1 >= w || y1 < 0 || y1 >= h) {
+						continue;
+					}
+					if(visit[y1][x1]) {
+						continue;
+					}
+					bool safe = true;
+					for(int j = 0; j < 9; j++) {
+						int x2 = x1 + dx[j];
+				        int y2 = y1 + dy[j];
+						if(map_in[y2][x2] == '#') {
+							safe = false;
+							break;
+						}
+					}
+					if(!safe) {
+						continue;
+					}
+					visit[y1][x1] = true;
+					path[y1][x1] = {x,y};
+					q.push({x1,y1});
+			    }
+			}
+			int x0 = w - 3; 
+			int y0 = h - 3;
+			while(x0 != -1 && y0 != -1) {
+				map_in[y0][x0] = 'C';
+				int px = path[y0][x0].first;
+				int py = path[y0][x0].second;
+				x0 = px;
+				y0 = py;
+			}
+			map_in[2][2] = 'C';
+			print(map_in);
+		}
+};
 
+int main() {
+	MAP MAP1;
+	MAP1.output();
+	return 0;
+}
